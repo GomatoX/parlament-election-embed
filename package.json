@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "build": "preact build --dest=public --no-sw --no-ssr --no-esm",
+    "build": "preact build --dest=public --no-sw --no-ssr --no-esm && fix-index",
     "serve": "sirv build --port 8080 --cors --single",
     "dev": "preact watch",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "fix-index": "sed -i.bak 's/src=\"/src=\"./g' public/index.html"
   },
   "eslintConfig": {
     "extends": [
