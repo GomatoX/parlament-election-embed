@@ -17,15 +17,15 @@ export default class App extends Component {
     };
   }
 
-  async getDate() {
+  async getData() {
     const URL = 'https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/1/1746/rezultatai/rezultataiVienmVrt.json';
     const response = await fetch(URL)
       .then((r) => r.json())
       .catch(() => {
-        return JSON.parse(localStorage.getItem(responseMultiURL));
+        return JSON.parse(localStorage.getItem(URL));
       })
       .then((response) => {
-        localStorage.setItem(responseMultiURL, JSON.stringify(response));
+        localStorage.setItem(URL, JSON.stringify(response));
         return response;
       });
 
@@ -85,7 +85,7 @@ export default class App extends Component {
   }
 
   async componentDidMount() {
-    await this.getDate();
+    await this.getData();
   }
 
   hanldeDistrictClickChange = (side = 1) => () => {

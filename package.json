@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "build": "preact build",
+    "build": "preact build --dest=public --no-sw --no-ssr --no-esm",
     "serve": "sirv build --port 8080 --cors --single",
     "dev": "preact watch",
     "lint": "eslint src"
@@ -16,7 +16,8 @@
     ]
   },
   "eslintIgnore": [
-    "build/*"
+    "build/*",
+    "public/*"
   ],
   "devDependencies": {
     "eslint": "^6.0.1",
