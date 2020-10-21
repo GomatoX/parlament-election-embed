@@ -84,8 +84,12 @@ export default class App extends Component {
     );
   }
 
-  async componentDidMount() {
-    await this.getData();
+  componentDidMount() {
+    this.getData();
+
+    setInterval(() => {
+      this.getData();
+    }, 45000);
   }
 
   hanldeDistrictClickChange = (side = 1) => () => {
