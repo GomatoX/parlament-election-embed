@@ -3,6 +3,9 @@ import { format, parseISO } from 'date-fns';
 import ArrowIcon from './components/ArrowIcon';
 import './assets/scss/main.scss';
 
+const BASE_URL = 'https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/1/1746'; // `https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/2/1744`;
+const BASE_OLD_URL = 'https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/1/1746';
+
 export default class App extends Component {
   constructor() {
     super();
@@ -18,7 +21,7 @@ export default class App extends Component {
   }
 
   async getData() {
-    const URL = 'https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/1/1746/rezultatai/rezultataiVienmVrt.json';
+    const URL = `${BASE_URL}/rezultatai/rezultataiVienmVrt.json`;
     const response = await fetch(URL)
       .then((r) => r.json())
       .catch(() => {
@@ -29,8 +32,7 @@ export default class App extends Component {
         return response;
       });
 
-    const responseMultiURL =
-      'https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/1/1746/rezultatai/rezultataiDaugmVrt.json';
+    const responseMultiURL = `${BASE_OLD_URL}/rezultatai/rezultataiDaugmVrt.json`;
     const responseMulti = await fetch(responseMultiURL)
       .then((r) => r.json())
       .catch(() => {
@@ -131,7 +133,7 @@ export default class App extends Component {
     this.setState({
       selected: event.target.value,
     });
-    const URL = `https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/1/1746/rezultatai/rezultataiVienmRpg${event.target.value}.json`;
+    const URL = `${BASE_URL}/rezultatai/rezultataiVienmRpg${event.target.value}.json`;
     const response = await fetch(URL)
       .then((r) => r.json())
       .catch(() => {
@@ -161,7 +163,7 @@ export default class App extends Component {
 
   async getPartiesResults() {
     const districtResults = await this.state.districts.map(async (item) => {
-      const URL = `https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/1/1746/rezultatai/rezultataiVienmRpg${item.rpg_id}.json`;
+      const URL = `${BASE_URL}/rezultatai/rezultataiVienmRpg${item.rpg_id}.json`;
       const response = await fetch(URL)
         .then((r) => r.json())
         .catch(() => {
@@ -171,8 +173,6 @@ export default class App extends Component {
           localStorage.setItem(URL, JSON.stringify(response));
           return response;
         });
-
-      // localStorage.setItem()
 
       return response.data.balsai;
     });
@@ -215,35 +215,34 @@ export default class App extends Component {
 
         {this.state.view === 1 && (
           <>
-            <div className="election-results__navigation">
-              <button
-                type="button"
-                disabled={this.isNavButtonDisabled(-1)}
-                onClick={this.hanldeDistrictClickChange(-1)}
-              >
-                <ArrowIcon left={true} />
-              </button>
-              <select value={this.state.selected} onChange={this.handleDistrictSelect}>
-                {this.state.districts.map((item) => (
-                  <option value={item.rpg_id} key={item.rpg_id}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-              <button type="button" disabled={this.isNavButtonDisabled(1)} onClick={this.hanldeDistrictClickChange()}>
-                <ArrowIcon />
-              </button>
-            </div>
+            {this.state.districts.length > 0 && (
+              <div className="election-results__navigation">
+                <button
+                  type="button"
+                  disabled={this.isNavButtonDisabled(-1)}
+                  onClick={this.hanldeDistrictClickChange(-1)}
+                >
+                  <ArrowIcon left={true} />
+                </button>
+                <select value={this.state.selected} onChange={this.handleDistrictSelect}>
+                  {this.state.districts.map((item) => (
+                    <option value={item.rpg_id} key={item.rpg_id}>
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
+                <button type="button" disabled={this.isNavButtonDisabled(1)} onClick={this.hanldeDistrictClickChange()}>
+                  <ArrowIcon />
+                </button>
+              </div>
+            )}
 
             {this.state.candidates.map((item, index) => {
               const party = this.state.parties.find((pitem) => pitem.rorg_id === item.rorg_id);
               return (
                 <div className="election-results__participant_item" key={`candidate_${index}`}>
                   <div className="election-results__participant_item_image">
-                    <img
-                      src={`https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/1/1746/mobKand/img/v_${item.rknd_id}.jpg`}
-                      alt=""
-                    />
+                    <img src={`${BASE_URL}/mobKand/img/v_${item.rknd_id}.jpg`} alt="" />
                   </div>
                   <span
                     style={{
@@ -263,6 +262,8 @@ export default class App extends Component {
                 </div>
               );
             })}
+
+            {this.state.candidates.length === 0 && <div>Balsai skaičiuojami</div>}
 
             {selectedDistrict && (
               <div className="election-results__info">
@@ -306,6 +307,8 @@ export default class App extends Component {
 
               return results;
             }, [])}
+
+            {this.state.parties.length === 0 && <div>Balsai skaičiuojami</div>}
           </div>
         )}
       </div>
