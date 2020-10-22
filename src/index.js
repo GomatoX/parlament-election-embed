@@ -112,6 +112,21 @@ export default class App extends Component {
     }
   };
 
+  isNavButtonDisabled = (side = 1) => {
+    const { selected, districts } = this.state;
+    const index = districts.findIndex((item) => item.rpg_id === selected);
+
+    if (side && !!districts[index + side]) {
+      return false;
+    }
+
+    if (!side && index !== 0) {
+      return false;
+    }
+
+    return true;
+  };
+
   handleDistrictSelect = async (event) => {
     this.setState({
       selected: event.target.value,
@@ -201,7 +216,11 @@ export default class App extends Component {
         {this.state.view === 1 && (
           <>
             <div className="election-results__navigation">
-              <button type="button" onClick={this.hanldeDistrictClickChange(-1)}>
+              <button
+                type="button"
+                disabled={this.isNavButtonDisabled(-1)}
+                onClick={this.hanldeDistrictClickChange(-1)}
+              >
                 <ArrowIcon left={true} />
               </button>
               <select value={this.state.selected} onChange={this.handleDistrictSelect}>
@@ -211,7 +230,7 @@ export default class App extends Component {
                   </option>
                 ))}
               </select>
-              <button type="button" onClick={this.hanldeDistrictClickChange()}>
+              <button type="button" disabled={this.isNavButtonDisabled(1)} onClick={this.hanldeDistrictClickChange()}>
                 <ArrowIcon />
               </button>
             </div>
@@ -222,11 +241,8 @@ export default class App extends Component {
                 <div className="election-results__participant_item" key={`candidate_${index}`}>
                   <div className="election-results__participant_item_image">
                     <img
-                      onError={(event) => {
-                        event.target.style.display = 'none';
-                      }}
                       src={`https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/1/1746/mobKand/img/v_${item.rknd_id}.jpg`}
-                      alt={item.name}
+                      alt=""
                     />
                   </div>
                   <span

@@ -77,7 +77,6 @@
       margin: 0 2px;
 
       @include screen-sm {
-        font-size: 14px;
         line-height: 18px;
         letter-spacing: 0.5px;
       }
@@ -85,8 +84,14 @@
 
     button {
       border: none;
+      cursor: pointer;
       background: linear-gradient(0deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), #dadee5;
       padding: 0 13px;
+
+      &[disabled] {
+        cursor: not-allowed;
+        color: rgba(#000, 0.3);
+      }
     }
 
     &:first-child {
@@ -233,6 +238,7 @@
       letter-spacing: 0.5px;
       color: #0078d6;
       margin-left: 24px;
+      white-space: nowrap;
 
       @include screen-sm {
         font-size: 18px;
