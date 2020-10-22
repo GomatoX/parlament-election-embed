@@ -3,7 +3,8 @@ import { format, parseISO } from 'date-fns';
 import ArrowIcon from './components/ArrowIcon';
 import './assets/scss/main.scss';
 
-const BASE_URL = 'https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/1/1746'; // `https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/2/1744`;
+// 'https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/1/1746'; // `https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/2/1744`;
+const BASE_URL = 'https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/1/1746';
 const BASE_OLD_URL = 'https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/1/1746';
 
 export default class App extends Component {
@@ -209,7 +210,7 @@ export default class App extends Component {
               });
             }}
           >
-            Daugmandatė
+            Daugiamandatė
           </button>
         </div>
 
