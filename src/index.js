@@ -3,9 +3,51 @@ import { format, parseISO } from 'date-fns';
 import ArrowIcon from './components/ArrowIcon';
 import './assets/scss/main.scss';
 
-// 'https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/1/1746'; // `https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/2/1744`;
-const BASE_URL = 'https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/1/1746';
-const BASE_OLD_URL = 'https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/1/1746';
+const IMAGE_URL = 'https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/2/1744';
+// const BASE_URL = 'https://www.lrt.lt/static/projektai/vrk'; // 'https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/2/1744/rezultatai';
+// const BASE_OLD_URL = 'https://www.lrt.lt/static/projektai/vrk'; // 'https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/1/1746/rezultatai';
+
+const BASE_URL = 'https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/2/1744/rezultatai';
+const BASE_OLD_URL = 'https://www.vrk.lt/statiniai/puslapiai/rinkimai/1104/1/1746/rezultatai';
+
+const WIN_PARTICIPANTS = [
+  {
+    kandidatas: 'Ingrida ŠIMONYTĖ',
+    rknd_id: '2419503',
+    rorg_id: '30636',
+    iskelusi_partija: 'Tėvynės sąjunga – Lietuvos krikščionys demokratai',
+    balsadezese: '8744',
+    pastu: '3757',
+    is_viso: '12501',
+    proc_nuo_gal_biul: '62.65',
+    proc_nuo_dal_rinkeju: '61.17',
+    proc_nuo_rinkeju: '37.4',
+  },
+  {
+    kandidatas: 'Beata PETKEVIČ',
+    rknd_id: '2419633',
+    rorg_id: '30614',
+    iskelusi_partija: 'Lietuvos lenkų rinkimų akcija - Krikščioniškų šeimų sąjunga',
+    balsadezese: '6011',
+    pastu: '3465',
+    is_viso: '9476',
+    proc_nuo_gal_biul: '62.19',
+    proc_nuo_dal_rinkeju: '59',
+    proc_nuo_rinkeju: '29.12',
+  },
+  {
+    kandidatas: 'Česlav OLŠEVSKI',
+    rknd_id: '2419635',
+    rorg_id: '30614',
+    iskelusi_partija: 'Lietuvos lenkų rinkimų akcija - Krikščioniškų šeimų sąjunga',
+    balsadezese: '6234',
+    pastu: '3298',
+    is_viso: '9532',
+    proc_nuo_gal_biul: '55.82',
+    proc_nuo_dal_rinkeju: '52.77',
+    proc_nuo_rinkeju: '25.47',
+  },
+];
 
 export default class App extends Component {
   constructor() {
@@ -21,8 +63,8 @@ export default class App extends Component {
     };
   }
 
-  async getData() {
-    const URL = `${BASE_URL}/rezultatai/rezultataiVienmVrt.json`;
+  async getData(initial = true) {
+    const URL = `${BASE_URL}/rezultataiVienmVrt.json`;
     const response = await fetch(URL)
       .then((r) => r.json())
       .catch(() => {
@@ -33,7 +75,7 @@ export default class App extends Component {
         return response;
       });
 
-    const responseMultiURL = `${BASE_OLD_URL}/rezultatai/rezultataiDaugmVrt.json`;
+    const responseMultiURL = `${BASE_OLD_URL}/rezultataiDaugmVrt.json`;
     const responseMulti = await fetch(responseMultiURL)
       .then((r) => r.json())
       .catch(() => {
@@ -54,7 +96,7 @@ export default class App extends Component {
               rpg_id: item.rpg_id,
               rorg_id: item.rorg_id,
               mandates: parseInt(item.mandatu_skaicius, 10) || 0,
-              result: item.proc_nuo_dal_rinkeju,
+              result: item.proc_nuo_gal_biul,
             });
           }
           return results;
@@ -75,11 +117,14 @@ export default class App extends Component {
         }, []),
       },
       async () => {
-        this.handleDistrictSelect({
-          target: {
-            value: this.state.districts[0].rpg_id,
-          },
-        });
+        if (initial) {
+          this.handleDistrictSelect({
+            target: {
+              value: this.state.districts[0].rpg_id,
+            },
+          });
+        }
+
         this.setState({
           participants: await this.getPartiesResults(),
         });
@@ -88,10 +133,10 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    this.getData();
+    this.getData(true);
 
     setInterval(() => {
-      this.getData();
+      this.getData(false);
     }, 45000);
   }
 
@@ -134,7 +179,7 @@ export default class App extends Component {
     this.setState({
       selected: event.target.value,
     });
-    const URL = `${BASE_URL}/rezultatai/rezultataiVienmRpg${event.target.value}.json`;
+    const URL = `${BASE_URL}/rezultataiVienmRpg${event.target.value}.json`;
     const response = await fetch(URL)
       .then((r) => r.json())
       .catch(() => {
@@ -152,7 +197,7 @@ export default class App extends Component {
             rorg_id: item.rorg_id,
             rknd_id: item.rknd_id,
             name: item.kandidatas,
-            result: item.proc_nuo_dal_rinkeju,
+            result: item.proc_nuo_gal_biul,
             party: item.iskelusi_partija,
           });
         }
@@ -164,7 +209,7 @@ export default class App extends Component {
 
   async getPartiesResults() {
     const districtResults = await this.state.districts.map(async (item) => {
-      const URL = `${BASE_URL}/rezultatai/rezultataiVienmRpg${item.rpg_id}.json`;
+      const URL = `${BASE_URL}/rezultataiVienmRpg${item.rpg_id}.json`;
       const response = await fetch(URL)
         .then((r) => r.json())
         .catch(() => {
@@ -180,7 +225,7 @@ export default class App extends Component {
 
     const result = await Promise.all(districtResults);
 
-    return result.flat();
+    return result.flat().concat(WIN_PARTICIPANTS);
   }
 
   render() {
@@ -210,7 +255,7 @@ export default class App extends Component {
               });
             }}
           >
-            Daugiamandatė
+            Mandatų skaičius
           </button>
         </div>
 
@@ -225,6 +270,7 @@ export default class App extends Component {
                 >
                   <ArrowIcon left={true} />
                 </button>
+                {/* TODO */}
                 <select value={this.state.selected} onChange={this.handleDistrictSelect}>
                   {this.state.districts.map((item) => (
                     <option value={item.rpg_id} key={item.rpg_id}>
@@ -243,7 +289,7 @@ export default class App extends Component {
               return (
                 <div className="election-results__participant_item" key={`candidate_${index}`}>
                   <div className="election-results__participant_item_image">
-                    <img src={`${BASE_URL}/mobKand/img/v_${item.rknd_id}.jpg`} alt="" />
+                    <img src={`${IMAGE_URL}/mobKand/img/v_${item.rknd_id}.jpg`} alt="" />
                   </div>
                   <span
                     style={{
@@ -283,17 +329,30 @@ export default class App extends Component {
 
         {this.state.view === 2 && (
           <div className="election-results__list">
-            {this.state.parties.reduce((results, item, index) => {
-              const participants = this.state.participants.filter(
-                (pitem) =>
-                  pitem.rorg_id && pitem.rorg_id === item.rorg_id && parseFloat(pitem.proc_nuo_dal_rinkeju) > 50
-              );
+            {this.state.parties
+              .reduce((results, item) => {
+                const participants = this.state.participants.filter((pitem) => {
+                  return pitem.rorg_id && pitem.rorg_id === item.rorg_id && parseFloat(pitem.proc_nuo_gal_biul) > 50;
+                });
 
-              const mandates = item.mandates + participants.length;
+                const mandates =
+                  item.rorg_id === '30636'
+                    ? item.mandates + participants.length + 1
+                    : item.mandates + participants.length;
 
-              if (mandates) {
-                results.push(
-                  <div className="election-results__item" data-mandates={mandates} key={`party_${index}`}>
+                if (mandates) {
+                  results.push({
+                    ...item,
+                    mandates,
+                  });
+                }
+
+                return results;
+              }, [])
+              .sort((a, b) => (a.mandates > b.mandates ? -1 : 1))
+              .map((item, index) => {
+                return (
+                  <div className="election-results__item" data-mandates={item.mandates} key={`party_${index}`}>
                     <img src={`./assets/images/${item.number}.jpg`} alt="" />
                     {item.name}
                     <span
@@ -304,12 +363,13 @@ export default class App extends Component {
                     <div className="election-results__item_result">{item.result} %</div>
                   </div>
                 );
-              }
-
-              return results;
-            }, [])}
+              })}
 
             {this.state.parties.length === 0 && <div>Balsai skaičiuojami</div>}
+
+            <div className="mt-2">
+              Mandatų skaičius atnaujinamas tiesiogiai pagal vienmandatėje pirmaujantį kandidatą.
+            </div>
           </div>
         )}
       </div>
