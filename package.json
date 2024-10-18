@@ -1,38 +1,33 @@
 {
   "private": true,
-  "name": "lrt-election-addon",
-  "version": "0.0.0",
-  "license": "MIT",
   "scripts": {
-    "build": "preact build --dest=public --no-sw --no-ssr --no-esm && npm run fix-index && npm run fix-styles",
-    "serve": "sirv build --port 8080 --cors --single",
-    "dev": "preact watch",
-    "lint": "eslint src",
-    "fix-index": "sed -i.bak 's/src=\"/src=\"./g' public/index.html",
-    "fix-styles": "sed -i.bak2 's/href=\"\\//href=\".\\//g' public/index.html"
-  },
-  "eslintConfig": {
-    "extends": [
-      "eslint-config-synacor",
-      "plugin:prettier/recommended"
-    ]
-  },
-  "eslintIgnore": [
-    "build/*",
-    "public/*"
-  ],
-  "devDependencies": {
-    "eslint": "^6.0.1",
-    "eslint-config-synacor": "^3.0.4",
-    "node-sass": "^4.14.1",
-    "preact-cli": "^3.0.0",
-    "sass-loader": "^10.0.3",
-    "sirv-cli": "^1.0.3"
+    "dev": "vite",
+    "build": "vite build",
+    "postbuild": "webpack --config ./scripts/webpack.config.js",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "date-fns": "^2.16.1",
+    "@fontsource/source-sans-pro": "^5.1.0",
+    "axios": "^1.7.7",
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.4.5",
+    "dotenv-webpack": "^8.1.0",
+    "html-webpack-plugin": "^5.6.0",
     "normalize.css": "^8.0.1",
-    "preact": "^10.1.0",
-    "preact-render-to-string": "^5.1.2"
+    "preact": "^10.22.1",
+    "preact-iso": "^2.6.3",
+    "preact-render-to-string": "^6.5.11",
+    "webpack": "^5.95.0"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.9.0",
+    "eslint": "^8.57.1",
+    "eslint-config-preact": "^1.5.0",
+    "sass-embedded": "^1.79.4",
+    "vite": "^5.3.3",
+    "webpack-cli": "^5.1.4"
+  },
+  "eslintConfig": {
+    "extends": "preact"
   }
 }
