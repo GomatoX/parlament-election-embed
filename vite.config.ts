@@ -1,6 +1,8 @@
 import { defineConfig } from "vite";
 import preact from "@preact/preset-vite";
 
+require("dotenv").config({ path: "./.env" });
+
 // https://vitejs.dev/config/
 export default defineConfig({
   // base: "https://www.lrt.lt/static/prezidento-rinkimai-2024/",

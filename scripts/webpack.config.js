@@ -18,7 +18,6 @@ module.exports = () => {
     plugins: [
       new Dotenv(),
       new HtmlWebpackPlugin({
-        embed: process.env.REACT_APP_EMBED,
         filename: "index.html",
         template: "./scripts/index.html",
       }),

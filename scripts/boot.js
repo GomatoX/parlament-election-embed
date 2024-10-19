@@ -7,6 +7,8 @@ const baseURL = process.env.VITE_BASE_URL;
     return;
   }
 
+  window["election"] = {};
+
   const source = Object.values(manifest).find((i) => {
     return "isEntry" in i && i.isEntry;
   });
