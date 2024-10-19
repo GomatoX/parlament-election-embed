@@ -76,6 +76,13 @@ To set up the development environment:
 4. **Deployment**  
    Copy the contents of the dist/ directory and deploy them to the preferred location.
 
+   Script for embed:
+
+   ```
+   <div id="election-embed"></div>
+   <script src="https://www.lrt.lt/static/parlament-election-2024/boot.js" defer="defer" />
+   ```
+
 ## Election Tour Differences
 
 Be mindful of potential differences between election rounds. Before publishing, always verify that the data is accurate.

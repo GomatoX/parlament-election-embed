@@ -22,8 +22,8 @@ import {
 // More info about id of elections
 // https://www.vrk.lt/statiniai/puslapiai/rinkimai/rt.json
 // dir + id /1104/1/1746
-const TOUR_ONE_ELECTION_ID = process.env.VITE_ELECTION_TOUR_ONE_ID;
-const TOUR_TWO_ELECTION_ID = process.env.VITE_ELECTION_TOUR_TWO_ID;
+const TOUR_ONE_ELECTION_ID = import.meta.env.VITE_ELECTION_TOUR_ONE_ID;
+const TOUR_TWO_ELECTION_ID = import.meta.env.VITE_ELECTION_TOUR_TWO_ID;
 
 // Set depending on elections tour
 export const ACTIVE_ELECTION_ID = TOUR_TWO_ELECTION_ID;

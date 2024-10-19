@@ -36,7 +36,7 @@ const Parties: FC<PartiesProps> = ({ parties, electedParticipants }) => {
               data-mandates={item.mandates}
               key={`party_${index}`}
             >
-              {process.env.VITE_APP_BUILD !== "true" && (
+              {import.meta.env.VITE_APP_BUILD !== "true" && (
                 <img
                   src={`${import.meta.env.VITE_BASE_URL}/assets/images/${
                     item.number
