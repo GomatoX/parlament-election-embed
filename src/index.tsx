@@ -108,8 +108,10 @@ export function App() {
       return results;
     }, []);
 
+    console.log(singleMandate);
+
     setElectedParticipants([
-      ...singleMandate.data.isrinkti,
+      ...(singleMandate.data.isrinkti || []),
       ...singleMandateElected.data.isrinkti,
     ]);
     setSelectedDistrict(districts[0].rpg_id);
