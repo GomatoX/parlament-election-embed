@@ -38,8 +38,6 @@ const MULTI_MANDATE_URL = `${BASE_URL(
   TOUR_ONE_ELECTION_ID
 )}/rezultataiDaugmVrt.json`;
 
-const WIN_PARTICIPANTS = [];
-
 // In case VRK is offline and not accessible, we store and return
 // 4 user latest saved data
 const request = async <T,>(url: string): Promise<T> => {
@@ -111,12 +109,6 @@ export function App() {
       return results;
     }, []);
 
-    console.log(singleMandate);
-
-    setElectedParticipants([
-      ...(singleMandate.data.isrinkti || []),
-      ...singleMandateElected.data.isrinkti,
-    ]);
     setSelectedDistrict(districts[0].rpg_id);
     setDistricts(districts);
 
@@ -125,7 +117,16 @@ export function App() {
 
     const participantsResults = await getPartiesResults(districts);
 
+    const electedParticipants = (participantsResults || []).filter((item) => {
+      return parseFloat(item.proc_nuo_gal_biul) >= 50 && item.rknd_id;
+    });
+
     setParticipants(participantsResults);
+
+    setElectedParticipants([
+      ...electedParticipants,
+      ...singleMandateElected.data.isrinkti,
+    ]);
   };
 
   const getPartiesResults = async (districts) => {
@@ -138,7 +139,7 @@ export function App() {
 
     const result = await Promise.all(districtResults);
 
-    return result.flat().concat(WIN_PARTICIPANTS);
+    return result.flat();
   };
 
   const getDistrict = async (code: string) => {
@@ -208,7 +209,7 @@ export function App() {
               <Parties
                 parties={parties}
                 participants={participants}
-                electedParticipants={electedParticipants}
+                electedParticipants={(electedParticipants as any) || []}
               />
             ),
           },

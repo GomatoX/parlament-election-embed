@@ -1,10 +1,14 @@
 import { FC } from "react";
-import { CandidateType, PartyType, SingleMandateResponse } from "../../types";
+import {
+  CandidateType,
+  PartyType,
+  SingleMandateItemResponse,
+} from "../../types";
 
 type PartiesProps = {
   parties: PartyType[];
   participants: CandidateType[];
-  electedParticipants: SingleMandateResponse["data"]["isrinkti"];
+  electedParticipants: SingleMandateItemResponse["data"]["balsai"];
 };
 
 const Parties: FC<PartiesProps> = ({ parties, electedParticipants }) => {
@@ -14,8 +18,10 @@ const Parties: FC<PartiesProps> = ({ parties, electedParticipants }) => {
         .reduce((results, item) => {
           const entries = electedParticipants.filter((pitem) => {
             return (
-              pitem.iskele &&
-              pitem.iskele === item.name.replace(`${item.number}. `, "")
+              (pitem.iskelusi_partija as string) ===
+                item.name.replace(`${item.number}. `, "") ||
+              (pitem as any).iskele ===
+                item.name.replace(`${item.number}. `, "")
             );
           });
 
@@ -50,9 +56,9 @@ const Parties: FC<PartiesProps> = ({ parties, electedParticipants }) => {
                   width: `${item.result}%`,
                 }}
               ></span>
-              <div className="embd-election-results__item_result">
+              {/* <div className="embd-election-results__item_result">
                 {item.result} %
-              </div>
+              </div> */}
             </div>
           );
         })}
