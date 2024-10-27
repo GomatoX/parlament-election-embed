@@ -46,7 +46,10 @@ const request = async <T,>(url: string): Promise<T> => {
   return axios<T>({
     // We get cached values from proxy if something starts not responding,
     // check api server
-    url: `https://api2.lrt.lt/vrk/clasificators?url=${url}`,
+    url:
+      import.meta.env.VITE_APP_BUILD !== "true"
+        ? url
+        : `https://api2.lrt.lt/vrk/clasificators?url=${url}`,
   })
     .catch(() => {
       return {};
